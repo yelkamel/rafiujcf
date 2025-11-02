@@ -29,6 +29,18 @@
             max-width: 800px;
             width: 100%;
             text-align: center;
+            position: relative;
+        }
+
+        .logo-header {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+            object-fit: cover;
         }
 
         .title {
@@ -258,6 +270,13 @@
                 padding: 6px 10px;
             }
 
+            .logo-header {
+                top: 15px;
+                right: 15px;
+                width: 55px;
+                height: 55px;
+            }
+
             .header {
                 padding-top: 0;
             }
@@ -272,6 +291,7 @@
 
             .quiz-container {
                 padding: 25px 20px;
+                padding-top: 80px;
             }
 
             .answer-btn {
@@ -291,6 +311,8 @@
 </head>
 <body>
     <div class="quiz-container">
+        <img src="assets/UJFC_logo.jpeg" alt="UJCF Logo" class="logo-header">
+
         <div class="header">
             <a href="index.html" class="home-btn">🏠 Accueil</a>
             <h1 class="title">Se Présenter</h1>
