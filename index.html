@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz Français - Se Présenter</title>
+    <title>Quiz de Français - DELF A1</title>
     <style>
         * {
             margin: 0;
@@ -21,480 +21,147 @@
             padding: 20px;
         }
 
-        .quiz-container {
+        .container {
             background: white;
             border-radius: 20px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
             padding: 40px;
-            max-width: 800px;
+            max-width: 900px;
             width: 100%;
             text-align: center;
         }
 
         .title {
-            font-size: 2.5em;
+            font-size: 2.8em;
             color: #2c3e50;
             margin-bottom: 10px;
         }
 
         .subtitle {
-            font-size: 1.2em;
+            font-size: 1.3em;
             color: #7f8c8d;
-            margin-bottom: 30px;
+            margin-bottom: 50px;
         }
 
-        .header {
-            position: relative;
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
         }
 
-        .profile-photo {
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            border: 3px solid #667eea;
-            box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
-            object-fit: cover;
+        .course-card {
+            background: white;
+            border: 3px solid #3498db;
+            border-radius: 15px;
+            padding: 30px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
         }
 
-        .progress-bar {
-            background: #ecf0f1;
-            border-radius: 10px;
-            height: 10px;
-            margin-bottom: 30px;
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(52, 152, 219, 0.3);
+            background: linear-gradient(135deg, #3498db 0%, #2ecc71 100%);
         }
 
-        .progress {
-            background: linear-gradient(90deg, #3498db, #2ecc71);
-            height: 100%;
-            border-radius: 10px;
-            transition: width 0.5s ease;
+        .course-card:hover .course-title,
+        .course-card:hover .course-description,
+        .course-card:hover .course-level {
+            color: white;
         }
 
-        .question-section {
-            margin-bottom: 30px;
+        .course-card.disabled {
+            border-color: #bdc3c7;
+            cursor: not-allowed;
+            opacity: 0.6;
         }
 
-        .question-header {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
+        .course-card.disabled:hover {
+            transform: none;
+            box-shadow: none;
+            background: white;
+        }
+
+        .course-card.disabled .course-title,
+        .course-card.disabled .course-description,
+        .course-card.disabled .course-level {
+            color: #95a5a6 !important;
+        }
+
+        .course-icon {
+            font-size: 3em;
             margin-bottom: 15px;
         }
 
-        .question {
-            font-size: 1.6em;
+        .course-title {
+            font-size: 1.5em;
             color: #2c3e50;
             font-weight: 600;
+            margin-bottom: 10px;
         }
 
-        .speaker-btn {
-            background: #e74c3c;
-            border: none;
-            border-radius: 50%;
-            width: 45px;
-            height: 45px;
-            cursor: pointer;
-            color: white;
-            font-size: 1.2em;
-            transition: all 0.3s ease;
-        }
-
-        .speaker-btn:hover {
-            background: #c0392b;
-            transform: scale(1.1);
-        }
-
-        .translation {
+        .course-description {
             font-size: 1em;
             color: #7f8c8d;
-            font-style: italic;
+            margin-bottom: 15px;
+            line-height: 1.5;
         }
 
-        .answers {
-            display: grid;
-            gap: 15px;
-            margin: 30px 0;
-        }
-
-        .answer-btn {
-            background: white;
-            border: 2px solid #3498db;
-            border-radius: 10px;
-            padding: 15px 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .answer-btn:hover {
-            background: #3498db;
-            color: white;
-            transform: translateY(-2px);
-        }
-
-        .answer-french {
-            font-weight: 600;
-            font-size: 1.1em;
-        }
-
-        .answer-chinese {
-            color: #666;
-            font-style: italic;
+        .course-level {
             font-size: 0.9em;
-        }
-
-        .answer-btn:hover .answer-chinese {
-            color: #ddd;
-        }
-
-        .answer-btn.correct {
-            background: #2ecc71;
-            color: white;
-            border-color: #27ae60;
-        }
-
-        .answer-btn.incorrect {
-            background: #e74c3c;
-            color: white;
-            border-color: #c0392b;
-        }
-
-        .answer-btn.correct .answer-chinese,
-        .answer-btn.incorrect .answer-chinese {
-            color: #ddd;
-        }
-
-        .next-btn {
-            background: #2ecc71;
-            color: white;
-            border: none;
-            border-radius: 25px;
-            padding: 12px 30px;
-            font-size: 1.1em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .next-btn.show {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .next-btn:hover {
-            background: #27ae60;
-            transform: translateY(-2px);
-        }
-
-        .score {
-            font-size: 1.2em;
-            color: #2c3e50;
-            margin-bottom: 20px;
+            color: #3498db;
             font-weight: 600;
+            text-transform: uppercase;
         }
 
-        .final-screen {
-            text-align: center;
+        .course-card.disabled .course-level {
+            color: #95a5a6;
         }
 
-        .final-score {
-            font-size: 2.5em;
-            color: #2ecc71;
-            margin: 20px 0;
-            font-weight: bold;
-        }
-
-        .restart-btn {
-            background: #9b59b6;
-            color: white;
-            border: none;
-            border-radius: 25px;
-            padding: 15px 40px;
-            font-size: 1.2em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .restart-btn:hover {
-            background: #8e44ad;
-            transform: translateY(-2px);
+        .footer {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #ecf0f1;
+            color: #7f8c8d;
+            font-size: 0.9em;
         }
     </style>
 </head>
 <body>
-    <div class="quiz-container">
-        <div class="header">
-            <h1 class="title">Se Présenter</h1>
-            <p class="subtitle">自我介绍 - Verbes ÊTRE et AVOIR (DELF A1)</p>
-            <div class="progress-bar">
-                <div class="progress" id="progress" style="width: 5%;"></div>
-            </div>
-        </div>
+    <div class="container">
+        <h1 class="title">Quiz de Français</h1>
+        <p class="subtitle">Apprentissage du français - DELF A1<br>法语学习测验</p>
 
-        <div id="quiz-area">
-            <div class="question-section">
-                <div class="question-header">
-                    <div class="question" id="question"></div>
-                    <button class="speaker-btn" id="speakerBtn">🔊</button>
+        <div class="courses-grid">
+            <a href="cours1-quiz.html" class="course-card">
+                <div class="course-icon">📚</div>
+                <div class="course-title">Cours 1 - Se Présenter</div>
+                <div class="course-description">
+                    Verbes ÊTRE et AVOIR<br>
+                    动词 ÊTRE 和 AVOIR<br>
+                    20 questions
                 </div>
-                <div class="translation" id="translation"></div>
+                <div class="course-level">DELF A1</div>
+            </a>
+
+            <div class="course-card disabled">
+                <div class="course-icon">🔒</div>
+                <div class="course-title">Cours 2</div>
+                <div class="course-description">
+                    À venir...<br>
+                    即将推出...<br>
+                    Prochainement
+                </div>
+                <div class="course-level">DELF A1</div>
             </div>
-
-            <div class="answers" id="answers"></div>
-
-            <button class="next-btn" id="nextBtn">Question suivante</button>
         </div>
 
-        <div class="score" id="score">Score: 0/20 - Niveau 1</div>
+        <div class="footer">
+            Apprenez le français étape par étape 一步一步学法语
+        </div>
     </div>
-
-    <script>
-        const quizDataLevel1 = [
-            {question: "Je ... étudiant.", translation: "我是学生。", answers: [{french: "suis", chinese: "是(我)"}, {french: "es", chinese: "是(你)"}, {french: "est", chinese: "是(他/她)"}, {french: "ai", chinese: "有(我)"}], correct: 0},
-            {question: "Tu ... français ?", translation: "你是法国人吗？", answers: [{french: "suis", chinese: "是(我)"}, {french: "es", chinese: "是(你)"}, {french: "êtes", chinese: "是(您)"}, {french: "as", chinese: "有(你)"}], correct: 1},
-            {question: "Elle ... 25 ans.", translation: "她25岁。", answers: [{french: "est", chinese: "是"}, {french: "a", chinese: "有"}, {french: "ai", chinese: "有(我)"}, {french: "avez", chinese: "有(您)"}], correct: 1},
-            {question: "Nous ... professeurs.", translation: "我们是老师。", answers: [{french: "êtes", chinese: "是(您)"}, {french: "sont", chinese: "是(他们)"}, {french: "sommes", chinese: "是(我们)"}, {french: "avons", chinese: "有(我们)"}], correct: 2},
-            {question: "J'... un chat.", translation: "我有一只猫。", answers: [{french: "ai", chinese: "有(我)"}, {french: "as", chinese: "有(你)"}, {french: "suis", chinese: "是(我)"}, {french: "a", chinese: "有(他/她)"}], correct: 0},
-            {question: "Vous ... de quelle nationalité ?", translation: "您是什么国籍？", answers: [{french: "es", chinese: "是(你)"}, {french: "êtes", chinese: "是(您)"}, {french: "avez", chinese: "有(您)"}, {french: "sont", chinese: "是(他们)"}], correct: 1},
-            {question: "Il ... médecin.", translation: "他是医生。", answers: [{french: "suis", chinese: "是(我)"}, {french: "es", chinese: "是(你)"}, {french: "est", chinese: "是(他)"}, {french: "a", chinese: "有"}], correct: 2},
-            {question: "Elles ... deux enfants.", translation: "她们有两个孩子。", answers: [{french: "sont", chinese: "是(她们)"}, {french: "ont", chinese: "有(她们)"}, {french: "avons", chinese: "有(我们)"}, {french: "êtes", chinese: "是(您)"}], correct: 1},
-            {question: "Je ... de Paris.", translation: "我来自巴黎。", answers: [{french: "suis", chinese: "是(我)"}, {french: "ai", chinese: "有(我)"}, {french: "es", chinese: "是(你)"}, {french: "est", chinese: "是(他/她)"}], correct: 0},
-            {question: "Tu ... quel âge ?", translation: "你多大了？", answers: [{french: "es", chinese: "是"}, {french: "as", chinese: "有"}, {french: "ai", chinese: "有(我)"}, {french: "êtes", chinese: "是(您)"}], correct: 1},
-            {question: "Nous ... une voiture.", translation: "我们有一辆车。", answers: [{french: "sommes", chinese: "是(我们)"}, {french: "avons", chinese: "有(我们)"}, {french: "êtes", chinese: "是(您)"}, {french: "ont", chinese: "有(他们)"}], correct: 1},
-            {question: "Ils ... contents.", translation: "他们很高兴。", answers: [{french: "ont", chinese: "有"}, {french: "sont", chinese: "是"}, {french: "avons", chinese: "有(我们)"}, {french: "sommes", chinese: "是(我们)"}], correct: 1},
-            {question: "Ma sœur ... infirmière.", translation: "我姐姐是护士。", answers: [{french: "suis", chinese: "是(我)"}, {french: "es", chinese: "是(你)"}, {french: "est", chinese: "是(她)"}, {french: "a", chinese: "有"}], correct: 2},
-            {question: "Vous ... combien de frères ?", translation: "您有多少个兄弟？", answers: [{french: "êtes", chinese: "是"}, {french: "avez", chinese: "有"}, {french: "sont", chinese: "是(他们)"}, {french: "ont", chinese: "有(他们)"}], correct: 1},
-            {question: "Mes parents ... à la maison.", translation: "我父母在家。", answers: [{french: "suis", chinese: "是(我)"}, {french: "es", chinese: "是(你)"}, {french: "sont", chinese: "是(他们)"}, {french: "ont", chinese: "有(他们)"}], correct: 2},
-            {question: "J'... très fatigué aujourd'hui.", translation: "我今天很累。", answers: [{french: "ai", chinese: "有"}, {french: "suis", chinese: "是"}, {french: "es", chinese: "是(你)"}, {french: "est", chinese: "是(他/她)"}], correct: 1},
-            {question: "Tu ... un travail intéressant.", translation: "你有一份有趣的工作。", answers: [{french: "es", chinese: "是"}, {french: "as", chinese: "有"}, {french: "suis", chinese: "是(我)"}, {french: "ai", chinese: "有(我)"}], correct: 1},
-            {question: "Elle ... très gentille.", translation: "她很善良。", answers: [{french: "a", chinese: "有"}, {french: "est", chinese: "是"}, {french: "suis", chinese: "是(我)"}, {french: "as", chinese: "有(你)"}], correct: 1},
-            {question: "Nous ... des amis français.", translation: "我们有法国朋友。", answers: [{french: "sommes", chinese: "是(我们)"}, {french: "avons", chinese: "有(我们)"}, {french: "êtes", chinese: "是(您)"}, {french: "sont", chinese: "是(他们)"}], correct: 1},
-            {question: "Mon père ... grand et fort.", translation: "我爸爸又高又壮。", answers: [{french: "a", chinese: "有"}, {french: "ai", chinese: "有(我)"}, {french: "est", chinese: "是"}, {french: "suis", chinese: "是(我)"}], correct: 2}
-        ];
-
-        const quizDataLevel2 = [
-            {question: "Ma famille et moi, nous ... très unis.", translation: "我的家人和我，我们很团结。", answers: [{french: "sommes", chinese: "是(我们)"}, {french: "avons", chinese: "有(我们)"}, {french: "êtes", chinese: "是(您)"}, {french: "sont", chinese: "是(他们)"}], correct: 0},
-            {question: "Est-ce que vous ... des animaux domestiques ?", translation: "您有宠物吗？", answers: [{french: "êtes", chinese: "是"}, {french: "avez", chinese: "有"}, {french: "sont", chinese: "是(他们)"}, {french: "ont", chinese: "有(他们)"}], correct: 1},
-            {question: "Mes amis ... toujours à l'heure.", translation: "我的朋友们总是准时。", answers: [{french: "ont", chinese: "有"}, {french: "sont", chinese: "是"}, {french: "avons", chinese: "有(我们)"}, {french: "sommes", chinese: "是(我们)"}], correct: 1},
-            {question: "Je ... un rendez-vous chez le dentiste.", translation: "我有牙医预约。", answers: [{french: "suis", chinese: "是"}, {french: "ai", chinese: "有"}, {french: "es", chinese: "是(你)"}, {french: "as", chinese: "有(你)"}], correct: 1},
-            {question: "Tu ... en forme aujourd'hui ?", translation: "你今天身体好吗？", answers: [{french: "as", chinese: "有"}, {french: "es", chinese: "是"}, {french: "ai", chinese: "有(我)"}, {french: "suis", chinese: "是(我)"}], correct: 1},
-            {question: "Il ... l'habitude de se lever tôt.", translation: "他习惯早起。", answers: [{french: "est", chinese: "是"}, {french: "a", chinese: "有"}, {french: "suis", chinese: "是(我)"}, {french: "ai", chinese: "有(我)"}], correct: 1},
-            {question: "Nous ... prêts pour l'examen.", translation: "我们为考试做好了准备。", answers: [{french: "avons", chinese: "有"}, {french: "sommes", chinese: "是"}, {french: "êtes", chinese: "是(您)"}, {french: "sont", chinese: "是(他们)"}], correct: 1},
-            {question: "Vous ... besoin d'aide ?", translation: "您需要帮助吗？", answers: [{french: "êtes", chinese: "是"}, {french: "avez", chinese: "有"}, {french: "sont", chinese: "是(他们)"}, {french: "ont", chinese: "有(他们)"}], correct: 1},
-            {question: "Elles ... en vacances cette semaine.", translation: "她们这周在度假。", answers: [{french: "ont", chinese: "有"}, {french: "sont", chinese: "是"}, {french: "avons", chinese: "有(我们)"}, {french: "sommes", chinese: "是(我们)"}], correct: 1},
-            {question: "Mon frère ... peur des araignées.", translation: "我哥哥害怕蜘蛛。", answers: [{french: "est", chinese: "是"}, {french: "a", chinese: "有"}, {french: "suis", chinese: "是(我)"}, {french: "ai", chinese: "有(我)"}], correct: 1},
-            {question: "Je ... d'accord avec cette idée.", translation: "我同意这个想法。", answers: [{french: "ai", chinese: "有"}, {french: "suis", chinese: "是"}, {french: "es", chinese: "是(你)"}, {french: "as", chinese: "有(你)"}], correct: 1},
-            {question: "Tu ... envie de sortir ce soir ?", translation: "你今晚想出去吗？", answers: [{french: "es", chinese: "是"}, {french: "as", chinese: "有"}, {french: "ai", chinese: "有(我)"}, {french: "suis", chinese: "是(我)"}], correct: 1},
-            {question: "Elle ... très occupée en ce moment.", translation: "她现在很忙。", answers: [{french: "a", chinese: "有"}, {french: "est", chinese: "是"}, {french: "ai", chinese: "有(我)"}, {french: "suis", chinese: "是(我)"}], correct: 1},
-            {question: "Nous ... honte de notre erreur.", translation: "我们为我们的错误感到羞愧。", answers: [{french: "sommes", chinese: "是"}, {french: "avons", chinese: "有"}, {french: "êtes", chinese: "是(您)"}, {french: "sont", chinese: "是(他们)"}], correct: 1},
-            {question: "Vous ... sûrs de votre réponse ?", translation: "您确定您的答案吗？", answers: [{french: "avez", chinese: "有"}, {french: "êtes", chinese: "是"}, {french: "sont", chinese: "是(他们)"}, {french: "ont", chinese: "有(他们)"}], correct: 1},
-            {question: "Ils ... mal au dos après le sport.", translation: "运动后他们背疼。", answers: [{french: "sont", chinese: "是"}, {french: "ont", chinese: "有"}, {french: "sommes", chinese: "是(我们)"}, {french: "avons", chinese: "有(我们)"}], correct: 1},
-            {question: "Ma grand-mère ... très fière de ses petits-enfants.", translation: "我奶奶为她的孙子孙女们感到骄傲。", answers: [{french: "a", chinese: "有"}, {french: "est", chinese: "是"}, {french: "ai", chinese: "有(我)"}, {french: "suis", chinese: "是(我)"}], correct: 1},
-            {question: "Je ... du mal à comprendre cette leçon.", translation: "我难以理解这一课。", answers: [{french: "suis", chinese: "是"}, {french: "ai", chinese: "有"}, {french: "es", chinese: "是(你)"}, {french: "as", chinese: "有(你)"}], correct: 1},
-            {question: "Tu ... l'air fatigué ce matin.", translation: "你今天早上看起来很累。", answers: [{french: "es", chinese: "是"}, {french: "as", chinese: "有"}, {french: "ai", chinese: "有(我)"}, {french: "suis", chinese: "是(我)"}], correct: 1},
-            {question: "Mes cousins ... très sympas et généreux.", translation: "我的表兄弟们很友善和慷慨。", answers: [{french: "ont", chinese: "有"}, {french: "sont", chinese: "是"}, {french: "avons", chinese: "有(我们)"}, {french: "sommes", chinese: "是(我们)"}], correct: 1}
-        ];
-
-        let currentLevel = 1;
-        let currentQuestionIndex = 0;
-        let score = 0;
-        let hasAnswered = false;
-        let currentQuizData = quizDataLevel1;
-
-        function showCurrentQuestion() {
-            const currentQ = currentQuizData[currentQuestionIndex];
-            document.getElementById('question').textContent = currentQ.question;
-            document.getElementById('translation').textContent = currentQ.translation;
-            
-            const answersContainer = document.getElementById('answers');
-            answersContainer.innerHTML = '';
-            
-            currentQ.answers.forEach((answer, i) => {
-                const button = document.createElement('button');
-                button.className = 'answer-btn';
-                button.innerHTML = `<span class="answer-french">${answer.french}</span><span class="answer-chinese">${answer.chinese}</span>`;
-                button.addEventListener('click', () => selectAnswer(i));
-                answersContainer.appendChild(button);
-            });
-            
-            document.getElementById('nextBtn').classList.remove('show');
-            hasAnswered = false;
-            updateProgress();
-            updateScore();
-        }
-
-        function selectAnswer(answerIndex) {
-            if (hasAnswered) return;
-            hasAnswered = true;
-            const currentQ = currentQuizData[currentQuestionIndex];
-            const buttons = document.querySelectorAll('.answer-btn');
-            
-            if (answerIndex === currentQ.correct) {
-                // Bonne réponse
-                const completePhrase = currentQ.question.replace('...', currentQ.answers[answerIndex].french);
-                speakText(completePhrase);
-                
-                buttons[answerIndex].classList.add('correct');
-                buttons.forEach(button => button.style.pointerEvents = 'none');
-                
-                score++;
-            } else {
-                // Mauvaise réponse - NE PAS montrer la bonne réponse
-                speakText("C'est faux");
-                
-                buttons[answerIndex].classList.add('incorrect');
-                buttons.forEach(button => button.style.pointerEvents = 'none');
-            }
-            
-            document.getElementById('nextBtn').classList.add('show');
-            updateScore();
-        }
-
-        function nextQuestion() {
-            currentQuestionIndex++;
-            if (currentQuestionIndex >= currentQuizData.length) {
-                showFinalResult();
-            } else {
-                showCurrentQuestion();
-            }
-        }
-
-        function speakText(text) {
-            if ('speechSynthesis' in window) {
-                speechSynthesis.cancel();
-                const utterance = new SpeechSynthesisUtterance(text);
-                utterance.lang = 'fr-FR';
-                utterance.rate = 0.8;
-                speechSynthesis.speak(utterance);
-            }
-        }
-
-        function updateProgress() {
-            const percentage = ((currentQuestionIndex + 1) / currentQuizData.length) * 100;
-            document.getElementById('progress').style.width = percentage + '%';
-        }
-
-        function updateScore() {
-            document.getElementById('score').textContent = `Score: ${score}/${Math.min(currentQuestionIndex + 1, currentQuizData.length)} - Niveau ${currentLevel}`;
-        }
-
-        function showFinalResult() {
-            const percentage = Math.round((score / currentQuizData.length) * 100);
-            let message, emoji;
-            
-            if (score === currentQuizData.length) {
-                // Score parfait 20/20
-                if (currentLevel === 1) {
-                    message = 'PARFAIT ! Passons au niveau supérieur ! 完美！进入下一级别！';
-                    emoji = '🚀';
-                } else {
-                    message = 'PARFAIT ! Vous maîtrisez le A1 ! 完美！您掌握了A1！';
-                    emoji = '🏆';
-                }
-            } else {
-                // Score insuffisant - doit recommencer
-                message = `Vous devez avoir 20/20 pour continuer ! Recommencez ! 必须得20/20才能继续！重新开始！`;
-                emoji = '📚';
-            }
-            
-            let finalContent = `
-                <div class="final-screen">
-                    <div style="font-size: 3em; margin-bottom: 20px;">${emoji}</div>
-                    <h2 style="color: #2c3e50; margin-bottom: 20px;">Niveau ${currentLevel} Terminé !</h2>
-                    <div class="final-score" style="color: ${score === currentQuizData.length ? '#2ecc71' : '#e74c3c'};">${score}/${currentQuizData.length}</div>
-                    <div style="font-size: 1.3em; color: #7f8c8d; margin-bottom: 30px;">${percentage}% - ${message}</div>
-                    <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">`;
-            
-            if (score === currentQuizData.length) {
-                // Score parfait - proposer niveau suivant ou recommencer
-                finalContent += `<button class="restart-btn" id="restartBtn">Recommencer Niveau ${currentLevel}</button>`;
-                if (currentLevel === 1) {
-                    finalContent += '<button class="restart-btn" style="background: #e74c3c;" id="level2Btn">Niveau 2 - A1+ 🔥</button>';
-                }
-            } else {
-                // Score insuffisant - forcer à recommencer
-                finalContent += `<button class="restart-btn" style="background: #e74c3c;" id="restartBtn">Recommencer pour avoir 20/20</button>`;
-            }
-            
-            finalContent += '</div></div>';
-            document.getElementById('quiz-area').innerHTML = finalContent;
-            
-            document.getElementById('restartBtn').addEventListener('click', restartQuiz);
-            if (score === currentQuizData.length && currentLevel === 1) {
-                document.getElementById('level2Btn').addEventListener('click', startLevel2);
-            }
-        }
-
-        function startLevel2() {
-            currentLevel = 2;
-            currentQuizData = quizDataLevel2;
-            currentQuestionIndex = 0;
-            score = 0;
-            hasAnswered = false;
-            document.querySelector('.title').textContent = 'Quiz A1+';
-            document.querySelector('.subtitle').textContent = '进阶测验 - Expressions avec ÊTRE et AVOIR (A1+)';
-            
-            document.getElementById('quiz-area').innerHTML = `
-                <div class="question-section">
-                    <div class="question-header">
-                        <div class="question" id="question"></div>
-                        <button class="speaker-btn" id="speakerBtn">🔊</button>
-                    </div>
-                    <div class="translation" id="translation"></div>
-                </div>
-                <div class="answers" id="answers"></div>
-                <button class="next-btn" id="nextBtn">Question suivante</button>`;
-            
-            setupEventListeners();
-            showCurrentQuestion();
-        }
-
-        function restartQuiz() {
-            currentQuestionIndex = 0;
-            score = 0;
-            hasAnswered = false;
-            
-            if (currentLevel === 1) {
-                currentQuizData = quizDataLevel1;
-                document.querySelector('.title').textContent = 'Se Présenter';
-                document.querySelector('.subtitle').textContent = '自我介绍 - Verbes ÊTRE et AVOIR (DELF A1)';
-            } else {
-                currentQuizData = quizDataLevel2;
-                document.querySelector('.title').textContent = 'Quiz A1+';
-                document.querySelector('.subtitle').textContent = '进阶测验 - Expressions avec ÊTRE et AVOIR (A1+)';
-            }
-            
-            document.getElementById('quiz-area').innerHTML = `
-                <div class="question-section">
-                    <div class="question-header">
-                        <div class="question" id="question"></div>
-                        <button class="speaker-btn" id="speakerBtn">🔊</button>
-                    </div>
-                    <div class="translation" id="translation"></div>
-                </div>
-                <div class="answers" id="answers"></div>
-                <button class="next-btn" id="nextBtn">Question suivante</button>`;
-            
-            setupEventListeners();
-            showCurrentQuestion();
-        }
-
-        function setupEventListeners() {
-            document.getElementById('speakerBtn').addEventListener('click', () => {
-                speakText(document.getElementById('question').textContent);
-            });
-            document.getElementById('nextBtn').addEventListener('click', nextQuestion);
-        }
-
-        setupEventListeners();
-        showCurrentQuestion();
-    </script>
 </body>
 </html>
