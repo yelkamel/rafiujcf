@@ -196,6 +196,37 @@
             margin-bottom: 20px;
         }
 
+        .feedback-message {
+            background: linear-gradient(135deg, #f39c12 0%, #f1c40f 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        .feedback-message.show {
+            display: block;
+        }
+
+        .feedback-message.success {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         .answers {
             display: grid;
             gap: 15px;
@@ -315,6 +346,8 @@
                 <div class="instruction">🟢 Quelle question correspond ?</div>
             </div>
 
+            <div class="feedback-message" id="feedbackMsg"></div>
+
             <div class="answers" id="answers"></div>
 
             <button class="next-btn" id="nextBtn">Question suivante</button>
@@ -350,6 +383,7 @@
         let currentQuestionIndex = 0;
         let score = 0;
         let hasAnswered = false;
+        let foundCorrectAnswers = [];
 
         function showCurrentQuestion() {
             const currentQ = quizData[currentQuestionIndex];
@@ -367,32 +401,57 @@
             });
 
             document.getElementById('nextBtn').classList.remove('show');
+            document.getElementById('feedbackMsg').classList.remove('show', 'success');
+            foundCorrectAnswers = [];
             hasAnswered = false;
             updateProgress();
             updateScore();
         }
 
         function selectAnswer(answerIndex) {
-            if (hasAnswered) return;
-            hasAnswered = true;
             const currentQ = quizData[currentQuestionIndex];
             const buttons = document.querySelectorAll('.answer-btn');
+            const feedbackMsg = document.getElementById('feedbackMsg');
+
+            // Si déjà cliqué sur ce bouton, ne rien faire
+            if (foundCorrectAnswers.includes(answerIndex) || buttons[answerIndex].classList.contains('incorrect')) {
+                return;
+            }
 
             if (currentQ.correct.includes(answerIndex)) {
-                // Bonne réponse
+                // Bonne réponse trouvée
                 speakText(currentQ.answers[answerIndex]);
                 buttons[answerIndex].classList.add('correct');
-                buttons.forEach(button => button.style.pointerEvents = 'none');
-                score++;
+                buttons[answerIndex].style.pointerEvents = 'none';
+                foundCorrectAnswers.push(answerIndex);
+
+                // Vérifier si toutes les bonnes réponses ont été trouvées
+                if (foundCorrectAnswers.length === currentQ.correct.length) {
+                    // Scénario 2 : Toutes les bonnes réponses trouvées !
+                    feedbackMsg.textContent = '🎉 Parfait ! Toutes les bonnes réponses trouvées !';
+                    feedbackMsg.classList.add('show', 'success');
+                    buttons.forEach(button => button.style.pointerEvents = 'none');
+                    document.getElementById('nextBtn').classList.add('show');
+                    score++;
+                    updateScore();
+                } else {
+                    // Scénario 1 : Bonne réponse mais il en reste d'autres
+                    const remaining = currentQ.correct.length - foundCorrectAnswers.length;
+                    const plural = remaining > 1 ? 's' : '';
+                    feedbackMsg.textContent = `✅ Correct ! Il reste ${remaining} autre${plural} bonne${plural} réponse${plural}`;
+                    feedbackMsg.classList.add('show');
+                    feedbackMsg.classList.remove('success');
+                }
             } else {
-                // Mauvaise réponse - NE PAS montrer la bonne réponse
+                // Scénario 3 : Mauvaise réponse
                 speakText("C'est faux");
                 buttons[answerIndex].classList.add('incorrect');
                 buttons.forEach(button => button.style.pointerEvents = 'none');
+                feedbackMsg.textContent = '❌ Dommage, ce n\'est pas la bonne réponse.';
+                feedbackMsg.classList.add('show');
+                feedbackMsg.classList.remove('success');
+                document.getElementById('nextBtn').classList.add('show');
             }
-
-            document.getElementById('nextBtn').classList.add('show');
-            updateScore();
         }
 
         function nextQuestion() {
