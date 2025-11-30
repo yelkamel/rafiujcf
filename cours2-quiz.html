@@ -443,7 +443,7 @@
                     feedbackMsg.classList.remove('success');
                 }
             } else {
-                // Scénario 3 : Mauvaise réponse
+                // Scénario 3 : Mauvaise réponse - NE PAS montrer les bonnes réponses
                 speakText("C'est faux");
                 buttons[answerIndex].classList.add('incorrect');
                 buttons.forEach(button => button.style.pointerEvents = 'none');
@@ -451,6 +451,7 @@
                 feedbackMsg.classList.add('show');
                 feedbackMsg.classList.remove('success');
                 document.getElementById('nextBtn').classList.add('show');
+                // Score reste à 0 pour cette question
             }
         }
 
@@ -489,28 +490,27 @@
             if (score === quizData.length) {
                 message = 'PARFAIT ! Vous maîtrisez les questions ! 完美！您掌握了提问！';
                 emoji = '🏆';
-            } else if (score >= 17) {
-                message = 'EXCELLENT ! Très bon travail ! 非常好！';
-                emoji = '🌟';
-            } else if (score >= 14) {
-                message = 'BIEN ! Continuez comme ça ! 很好！继续加油！';
-                emoji = '👍';
             } else {
-                message = 'Recommencez pour progresser ! 重新开始进步！';
+                message = 'Vous devez avoir 20/20 pour continuer ! Recommencez ! 必须得20/20才能继续！重新开始！';
                 emoji = '📚';
             }
 
-            const finalContent = `
+            let finalContent = `
                 <div class="final-screen">
                     <div style="font-size: 3em; margin-bottom: 20px;">${emoji}</div>
                     <h2 style="color: #2c3e50; margin-bottom: 20px;">Quiz Terminé !</h2>
-                    <div class="final-score" style="color: ${score >= 17 ? '#2ecc71' : score >= 14 ? '#f39c12' : '#e74c3c'};">${score}/${quizData.length}</div>
+                    <div class="final-score" style="color: ${score === quizData.length ? '#2ecc71' : '#e74c3c'};">${score}/${quizData.length}</div>
                     <div style="font-size: 1.3em; color: #7f8c8d; margin-bottom: 30px;">${percentage}% - ${message}</div>
-                    <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
-                        <button class="restart-btn" id="restartBtn">Recommencer</button>
-                        <a href="index.html" class="restart-btn" style="background: #3498db; text-decoration: none; display: inline-flex; align-items: center;">Retour à l'accueil</a>
-                    </div>
-                </div>`;
+                    <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">`;
+
+            if (score === quizData.length) {
+                finalContent += `<button class="restart-btn" id="restartBtn">Recommencer</button>
+                        <a href="index.html" class="restart-btn" style="background: #3498db; text-decoration: none; display: inline-flex; align-items: center;">Retour à l'accueil</a>`;
+            } else {
+                finalContent += `<button class="restart-btn" style="background: #e74c3c;" id="restartBtn">Recommencer pour avoir 20/20</button>`;
+            }
+
+            finalContent += `</div></div>`;
 
             document.getElementById('quiz-area').innerHTML = finalContent;
             document.getElementById('restartBtn').addEventListener('click', restartQuiz);

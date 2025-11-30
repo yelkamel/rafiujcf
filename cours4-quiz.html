@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Français - La Négation (Partie 2)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .quiz-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+        }
+
+        .header-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .logo-header {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+            object-fit: cover;
+        }
+
+        .title {
+            font-size: 2.5em;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+        }
+
+        .header {
+            position: relative;
+        }
+
+        .progress-bar {
+            background: #ecf0f1;
+            border-radius: 10px;
+            height: 10px;
+            margin-bottom: 30px;
+        }
+
+        .progress {
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        .question-section {
+            margin-bottom: 30px;
+        }
+
+        .question-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .question {
+            font-size: 1.6em;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        .speaker-btn {
+            background: #e74c3c;
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            cursor: pointer;
+            color: white;
+            font-size: 1.2em;
+            transition: all 0.3s ease;
+        }
+
+        .speaker-btn:hover {
+            background: #c0392b;
+            transform: scale(1.1);
+        }
+
+        .translation {
+            font-size: 1em;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+
+        .answers {
+            display: grid;
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .answer-btn {
+            background: white;
+            border: 2px solid #3498db;
+            border-radius: 10px;
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .answer-btn:hover {
+            background: #3498db;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .answer-french {
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+
+        .answer-chinese {
+            color: #666;
+            font-style: italic;
+            font-size: 0.9em;
+        }
+
+        .answer-btn:hover .answer-chinese {
+            color: #ddd;
+        }
+
+        .answer-btn.correct {
+            background: #2ecc71;
+            color: white;
+            border-color: #27ae60;
+        }
+
+        .answer-btn.incorrect {
+            background: #e74c3c;
+            color: white;
+            border-color: #c0392b;
+        }
+
+        .answer-btn.correct .answer-chinese,
+        .answer-btn.incorrect .answer-chinese {
+            color: #ddd;
+        }
+
+        .next-btn {
+            background: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 12px 30px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .next-btn.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .next-btn:hover {
+            background: #27ae60;
+            transform: translateY(-2px);
+        }
+
+        .score {
+            font-size: 1.2em;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .final-screen {
+            text-align: center;
+        }
+
+        .final-score {
+            font-size: 2.5em;
+            color: #2ecc71;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+
+        .restart-btn {
+            background: #9b59b6;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .restart-btn:hover {
+            background: #8e44ad;
+            transform: translateY(-2px);
+        }
+
+        .home-btn {
+            background: transparent;
+            color: #3498db;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 0.95em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .home-btn:hover {
+            background: rgba(52, 152, 219, 0.1);
+            color: #2980b9;
+        }
+
+        @media (max-width: 768px) {
+            .home-btn {
+                font-size: 0.85em;
+                padding: 6px 10px;
+            }
+
+            .logo-header {
+                width: 40px;
+                height: 40px;
+            }
+
+            .header-nav {
+                margin-bottom: 15px;
+            }
+
+            .header {
+                padding-top: 0;
+            }
+
+            .title {
+                font-size: 2em;
+            }
+
+            .subtitle {
+                font-size: 1em;
+            }
+
+            .quiz-container {
+                padding: 25px 20px;
+            }
+
+            .answer-btn {
+                padding: 12px 15px;
+                font-size: 1em;
+            }
+
+            .answer-french {
+                font-size: 1em;
+            }
+
+            .answer-chinese {
+                font-size: 0.85em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <div class="header-nav">
+            <a href="index.html" class="home-btn">🏠 Accueil</a>
+            <img src="assets/UJFC_logo.jpeg" alt="UJCF Logo" class="logo-header">
+        </div>
+
+        <div class="header">
+            <h1 class="title">La Négation (Partie 2)</h1>
+            <p class="subtitle">法语否定（第二部分） - Négation avancée (DELF A1)</p>
+            <div class="progress-bar">
+                <div class="progress" id="progress" style="width: 5%;"></div>
+            </div>
+        </div>
+
+        <div id="quiz-area">
+            <div class="question-section">
+                <div class="question-header">
+                    <div class="question" id="question"></div>
+                    <button class="speaker-btn" id="speakerBtn">🔊</button>
+                </div>
+                <div class="translation" id="translation"></div>
+            </div>
+
+            <div class="answers" id="answers"></div>
+
+            <button class="next-btn" id="nextBtn">Question suivante</button>
+        </div>
+
+        <div class="score" id="score">Score: 0/20</div>
+    </div>
+
+    <script>
+        const quizData = [
+            // Négations avancées et complexes
+            {question: "Il a quelque chose dans la main.", translation: "他手里有东西。", answers: [{french: "Il n'a rien dans la main.", chinese: "他手里什么都没有。✓"}, {french: "Il n'a pas quelque chose dans la main.", chinese: "错误形式"}, {french: "Il a rien dans la main.", chinese: "缺少 ne"}], correct: 0},
+            {question: "Quelqu'un a téléphoné.", translation: "有人打电话了。", answers: [{french: "Personne n'a téléphoné.", chinese: "没人打电话。✓"}, {french: "Quelqu'un n'a pas téléphoné.", chinese: "错误形式"}, {french: "Personne a téléphoné.", chinese: "缺少 ne"}], correct: 0},
+            {question: "Elle veut du pain et du fromage.", translation: "她想要面包和奶酪。", answers: [{french: "Elle ne veut pas du pain et du fromage.", chinese: "错误形式"}, {french: "Elle ne veut ni pain ni fromage.", chinese: "她既不要面包也不要奶酪。✓"}, {french: "Elle veut ni pain ni fromage.", chinese: "缺少 ne"}], correct: 1},
+            {question: "J'ai déjà fini mes devoirs.", translation: "我已经完成作业了。", answers: [{french: "Je n'ai pas fini mes devoirs.", chinese: "我没完成作业。"}, {french: "Je n'ai pas encore fini mes devoirs.", chinese: "我还没完成作业。✓"}, {french: "Je n'ai jamais fini mes devoirs.", chinese: "我从没完成过作业。"}], correct: 1},
+            {question: "Nous allons encore à cette école.", translation: "我们还在这所学校上学。", answers: [{french: "Nous n'allons pas à cette école.", chinese: "我们不去这所学校。"}, {french: "Nous n'allons plus à cette école.", chinese: "我们不再去这所学校了。✓"}, {french: "Nous allons plus à cette école.", chinese: "缺少 ne"}], correct: 1},
+            {question: "Il dit toujours la vérité.", translation: "他总是说实话。", answers: [{french: "Il ne dit jamais la vérité.", chinese: "他从不说实话。✓"}, {french: "Il ne dit plus la vérité.", chinese: "他不再说实话了。"}, {french: "Il dit jamais la vérité.", chinese: "缺少 ne"}], correct: 0},
+            {question: "Quelqu'un comprend cette leçon.", translation: "有人理解这课。", answers: [{french: "Personne ne comprend cette leçon.", chinese: "没人理解这课。✓"}, {french: "Quelqu'un ne comprend pas cette leçon.", chinese: "错误形式"}, {french: "Personne comprend cette leçon.", chinese: "缺少 ne"}], correct: 0},
+            {question: "Elle aime les chiens et les chats.", translation: "她喜欢狗和猫。", answers: [{french: "Elle n'aime pas les chiens et les chats.", chinese: "错误形式"}, {french: "Elle n'aime ni les chiens ni les chats.", chinese: "她既不喜欢狗也不喜欢猫。✓"}, {french: "Elle n'aime pas ni les chiens ni les chats.", chinese: "错误（双重否定）"}], correct: 1},
+            {question: "Tu as déjà visité Paris.", translation: "你已经参观过巴黎了。", answers: [{french: "Tu n'as pas visité Paris.", chinese: "你没参观过巴黎。"}, {french: "Tu n'as pas encore visité Paris.", chinese: "你还没参观过巴黎。✓"}, {french: "Tu n'as jamais visité Paris.", chinese: "你从没参观过巴黎。"}], correct: 1},
+            {question: "Il achète toujours ce journal.", translation: "他总是买这份报纸。", answers: [{french: "Il n'achète plus ce journal.", chinese: "他不再买这份报纸了。"}, {french: "Il n'achète jamais ce journal.", chinese: "他从不买这份报纸。✓"}, {french: "Il achète jamais ce journal.", chinese: "缺少 ne"}], correct: 1},
+
+            // Questions 11-20: Négations plus complexes
+            {question: "J'entends quelque chose.", translation: "我听到了什么。", answers: [{french: "Je n'entends rien.", chinese: "我什么都没听到。✓"}, {french: "Je n'entends pas quelque chose.", chinese: "错误形式"}, {french: "J'entends rien.", chinese: "缺少 ne"}], correct: 0},
+            {question: "Tout le monde est d'accord.", translation: "大家都同意。", answers: [{french: "Personne n'est d'accord.", chinese: "没人同意。✓"}, {french: "Tout le monde n'est pas d'accord.", chinese: "不是所有人都同意。"}, {french: "Personne est d'accord.", chinese: "缺少 ne"}], correct: 0},
+            {question: "Nous aimons le sport et la musique.", translation: "我们喜欢运动和音乐。", answers: [{french: "Nous n'aimons pas le sport et la musique.", chinese: "错误形式"}, {french: "Nous n'aimons ni le sport ni la musique.", chinese: "我们既不喜欢运动也不喜欢音乐。✓"}, {french: "Nous aimons ni le sport ni la musique.", chinese: "缺少 ne"}], correct: 1},
+            {question: "Elle a déjà lu ce livre.", translation: "她已经读过这本书了。", answers: [{french: "Elle n'a pas lu ce livre.", chinese: "她没读过这本书。"}, {french: "Elle n'a pas encore lu ce livre.", chinese: "她还没读过这本书。✓"}, {french: "Elle n'a jamais lu ce livre.", chinese: "她从没读过这本书。"}], correct: 1},
+            {question: "Ils viennent toujours en retard.", translation: "他们总是迟到。", answers: [{french: "Ils ne viennent pas toujours en retard.", chinese: "他们并不总是迟到。"}, {french: "Ils ne viennent jamais en retard.", chinese: "他们从不迟到。✓"}, {french: "Ils viennent jamais en retard.", chinese: "缺少 ne"}], correct: 1},
+            {question: "Je fume encore.", translation: "我还在抽烟。", answers: [{french: "Je ne fume pas.", chinese: "我不抽烟。"}, {french: "Je ne fume plus.", chinese: "我不再抽烟了。✓"}, {french: "Je fume plus.", chinese: "缺少 ne"}], correct: 1},
+            {question: "Quelqu'un sait la réponse.", translation: "有人知道答案。", answers: [{french: "Personne ne sait la réponse.", chinese: "没人知道答案。✓"}, {french: "Quelqu'un ne sait pas la réponse.", chinese: "错误形式"}, {french: "Personne sait la réponse.", chinese: "缺少 ne"}], correct: 0},
+            {question: "Vous mangez de la viande et du poisson.", translation: "您吃肉和鱼。", answers: [{french: "Vous ne mangez pas de la viande et du poisson.", chinese: "错误形式"}, {french: "Vous ne mangez ni viande ni poisson.", chinese: "您既不吃肉也不吃鱼。✓"}, {french: "Vous mangez ni viande ni poisson.", chinese: "缺少 ne"}], correct: 1},
+            {question: "Il a déjà appelé.", translation: "他已经打电话了。", answers: [{french: "Il n'a pas appelé.", chinese: "他没打电话。"}, {french: "Il n'a pas encore appelé.", chinese: "他还没打电话。✓"}, {french: "Il n'a jamais appelé.", chinese: "他从没打过电话。"}], correct: 1},
+            {question: "Tu dis toujours oui.", translation: "你总是说是。", answers: [{french: "Tu ne dis plus oui.", chinese: "你不再说是了。"}, {french: "Tu ne dis jamais oui.", chinese: "你从不说是。✓"}, {french: "Tu dis jamais oui.", chinese: "缺少 ne"}], correct: 1}
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let hasAnswered = false;
+
+        function showCurrentQuestion() {
+            const currentQ = quizData[currentQuestionIndex];
+            document.getElementById('question').textContent = currentQ.question;
+            document.getElementById('translation').textContent = currentQ.translation;
+
+            const answersContainer = document.getElementById('answers');
+            answersContainer.innerHTML = '';
+
+            currentQ.answers.forEach((answer, i) => {
+                const button = document.createElement('button');
+                button.className = 'answer-btn';
+                button.innerHTML = `<span class="answer-french">${answer.french}</span><span class="answer-chinese">${answer.chinese}</span>`;
+                button.addEventListener('click', () => selectAnswer(i));
+                answersContainer.appendChild(button);
+            });
+
+            document.getElementById('nextBtn').classList.remove('show');
+            hasAnswered = false;
+            updateProgress();
+            updateScore();
+        }
+
+        function selectAnswer(answerIndex) {
+            if (hasAnswered) return;
+            hasAnswered = true;
+            const currentQ = quizData[currentQuestionIndex];
+            const buttons = document.querySelectorAll('.answer-btn');
+
+            if (answerIndex === currentQ.correct) {
+                // Bonne réponse
+                speakText(currentQ.answers[answerIndex].french);
+
+                buttons[answerIndex].classList.add('correct');
+                buttons.forEach(button => button.style.pointerEvents = 'none');
+
+                score++;
+            } else {
+                // Mauvaise réponse - NE PAS montrer la bonne réponse
+                speakText("C'est faux");
+
+                buttons[answerIndex].classList.add('incorrect');
+                buttons.forEach(button => button.style.pointerEvents = 'none');
+            }
+
+            document.getElementById('nextBtn').classList.add('show');
+            updateScore();
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex >= quizData.length) {
+                showFinalResult();
+            } else {
+                showCurrentQuestion();
+            }
+        }
+
+        function speakText(text) {
+            if ('speechSynthesis' in window) {
+                speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'fr-FR';
+                utterance.rate = 0.8;
+                speechSynthesis.speak(utterance);
+            }
+        }
+
+        function updateProgress() {
+            const percentage = ((currentQuestionIndex + 1) / quizData.length) * 100;
+            document.getElementById('progress').style.width = percentage + '%';
+        }
+
+        function updateScore() {
+            document.getElementById('score').textContent = `Score: ${score}/${Math.min(currentQuestionIndex + 1, quizData.length)}`;
+        }
+
+        function showFinalResult() {
+            const percentage = Math.round((score / quizData.length) * 100);
+            let message, emoji;
+
+            if (score === quizData.length) {
+                message = 'PARFAIT ! Vous maîtrisez la négation avancée ! 完美！您掌握了高级否定！';
+                emoji = '🏆';
+            } else {
+                message = `Vous devez avoir 20/20 pour continuer ! Recommencez ! 必须得20/20才能继续！重新开始！`;
+                emoji = '📚';
+            }
+
+            let finalContent = `
+                <div class="final-screen">
+                    <div style="font-size: 3em; margin-bottom: 20px;">${emoji}</div>
+                    <h2 style="color: #2c3e50; margin-bottom: 20px;">Quiz Terminé !</h2>
+                    <div class="final-score" style="color: ${score === quizData.length ? '#2ecc71' : '#e74c3c'};">${score}/${quizData.length}</div>
+                    <div style="font-size: 1.3em; color: #7f8c8d; margin-bottom: 30px;">${percentage}% - ${message}</div>
+                    <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">`;
+
+            if (score === quizData.length) {
+                finalContent += `<button class="restart-btn" id="restartBtn">Recommencer</button>`;
+            } else {
+                finalContent += `<button class="restart-btn" style="background: #e74c3c;" id="restartBtn">Recommencer pour avoir 20/20</button>`;
+            }
+
+            finalContent += '</div></div>';
+            document.getElementById('quiz-area').innerHTML = finalContent;
+
+            document.getElementById('restartBtn').addEventListener('click', restartQuiz);
+        }
+
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            hasAnswered = false;
+
+            document.getElementById('quiz-area').innerHTML = `
+                <div class="question-section">
+                    <div class="question-header">
+                        <div class="question" id="question"></div>
+                        <button class="speaker-btn" id="speakerBtn">🔊</button>
+                    </div>
+                    <div class="translation" id="translation"></div>
+                </div>
+                <div class="answers" id="answers"></div>
+                <button class="next-btn" id="nextBtn">Question suivante</button>`;
+
+            setupEventListeners();
+            showCurrentQuestion();
+        }
+
+        function setupEventListeners() {
+            document.getElementById('speakerBtn').addEventListener('click', () => {
+                speakText(document.getElementById('question').textContent);
+            });
+            document.getElementById('nextBtn').addEventListener('click', nextQuestion);
+        }
+
+        setupEventListeners();
+        showCurrentQuestion();
+    </script>
+</body>
+</html>
