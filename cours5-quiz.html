@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Français - L'Imparfait</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .quiz-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+        }
+
+        .header-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .logo-header {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+            object-fit: cover;
+        }
+
+        .title {
+            font-size: 2.5em;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+        }
+
+        .header {
+            position: relative;
+        }
+
+        .progress-bar {
+            background: #ecf0f1;
+            border-radius: 10px;
+            height: 10px;
+            margin-bottom: 30px;
+        }
+
+        .progress {
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        .question-section {
+            margin-bottom: 30px;
+        }
+
+        .question-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .question {
+            font-size: 1.6em;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        .speaker-btn {
+            background: #e74c3c;
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            cursor: pointer;
+            color: white;
+            font-size: 1.2em;
+            transition: all 0.3s ease;
+        }
+
+        .speaker-btn:hover {
+            background: #c0392b;
+            transform: scale(1.1);
+        }
+
+        .translation {
+            font-size: 1em;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+
+        .answers {
+            display: grid;
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .answer-btn {
+            background: white;
+            border: 2px solid #3498db;
+            border-radius: 10px;
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .answer-btn:hover {
+            background: #3498db;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .answer-french {
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+
+        .answer-chinese {
+            color: #666;
+            font-style: italic;
+            font-size: 0.9em;
+        }
+
+        .answer-btn:hover .answer-chinese {
+            color: #ddd;
+        }
+
+        .answer-btn.correct {
+            background: #2ecc71;
+            color: white;
+            border-color: #27ae60;
+        }
+
+        .answer-btn.incorrect {
+            background: #e74c3c;
+            color: white;
+            border-color: #c0392b;
+        }
+
+        .answer-btn.correct .answer-chinese,
+        .answer-btn.incorrect .answer-chinese {
+            color: #ddd;
+        }
+
+        .next-btn {
+            background: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 12px 30px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .next-btn.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .next-btn:hover {
+            background: #27ae60;
+            transform: translateY(-2px);
+        }
+
+        .score {
+            font-size: 1.2em;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .final-screen {
+            text-align: center;
+        }
+
+        .final-score {
+            font-size: 2.5em;
+            color: #2ecc71;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+
+        .restart-btn {
+            background: #9b59b6;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .restart-btn:hover {
+            background: #8e44ad;
+            transform: translateY(-2px);
+        }
+
+        .home-btn {
+            background: transparent;
+            color: #3498db;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 0.95em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .home-btn:hover {
+            background: rgba(52, 152, 219, 0.1);
+            color: #2980b9;
+        }
+
+        .grammar-box {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .grammar-title {
+            color: #2c3e50;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .grammar-content {
+            color: #5a6c7d;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        .grammar-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .grammar-table th, .grammar-table td {
+            padding: 8px 12px;
+            text-align: center;
+            border: 1px solid #bdc3c7;
+        }
+
+        .grammar-table th {
+            background: #3498db;
+            color: white;
+        }
+
+        .grammar-table td {
+            background: white;
+        }
+
+        @media (max-width: 768px) {
+            .home-btn {
+                font-size: 0.85em;
+                padding: 6px 10px;
+            }
+
+            .logo-header {
+                width: 40px;
+                height: 40px;
+            }
+
+            .header-nav {
+                margin-bottom: 15px;
+            }
+
+            .header {
+                padding-top: 0;
+            }
+
+            .title {
+                font-size: 2em;
+            }
+
+            .subtitle {
+                font-size: 1em;
+            }
+
+            .quiz-container {
+                padding: 25px 20px;
+            }
+
+            .answer-btn {
+                padding: 12px 15px;
+                font-size: 1em;
+            }
+
+            .answer-french {
+                font-size: 1em;
+            }
+
+            .answer-chinese {
+                font-size: 0.85em;
+            }
+
+            .grammar-box {
+                padding: 15px;
+            }
+
+            .grammar-table th, .grammar-table td {
+                padding: 6px 8px;
+                font-size: 0.85em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <div class="header-nav">
+            <a href="index.html" class="home-btn">🏠 Accueil</a>
+            <img src="assets/UJFC_logo.jpeg" alt="UJCF Logo" class="logo-header">
+        </div>
+
+        <div class="header">
+            <h1 class="title">L'Imparfait</h1>
+            <p class="subtitle">过去未完成时 - Parler du passé (DELF A1)</p>
+            <div class="progress-bar">
+                <div class="progress" id="progress" style="width: 5%;"></div>
+            </div>
+        </div>
+
+        <div class="grammar-box">
+            <div class="grammar-title">📖 Formation de l'imparfait 过去未完成时的构成</div>
+            <div class="grammar-content">
+                <p><strong>Radical :</strong> verbe à "nous" au présent - ons</p>
+                <p><strong>Exemple :</strong> nous parlons → parl- | nous finissons → finiss-</p>
+                <table class="grammar-table">
+                    <tr>
+                        <th>Personne</th>
+                        <th>Terminaison</th>
+                        <th>Exemple (parler)</th>
+                    </tr>
+                    <tr><td>je</td><td>-ais</td><td>je parlais</td></tr>
+                    <tr><td>tu</td><td>-ais</td><td>tu parlais</td></tr>
+                    <tr><td>il/elle</td><td>-ait</td><td>il parlait</td></tr>
+                    <tr><td>nous</td><td>-ions</td><td>nous parlions</td></tr>
+                    <tr><td>vous</td><td>-iez</td><td>vous parliez</td></tr>
+                    <tr><td>ils/elles</td><td>-aient</td><td>ils parlaient</td></tr>
+                </table>
+                <p style="margin-top: 10px;"><strong>Exception :</strong> être → j'étais, tu étais, il était...</p>
+            </div>
+        </div>
+
+        <div id="quiz-area">
+            <div class="question-section">
+                <div class="question-header">
+                    <div class="question" id="question"></div>
+                    <button class="speaker-btn" id="speakerBtn">🔊</button>
+                </div>
+                <div class="translation" id="translation"></div>
+            </div>
+
+            <div class="answers" id="answers"></div>
+
+            <button class="next-btn" id="nextBtn">Question suivante</button>
+        </div>
+
+        <div class="score" id="score">Score: 0/20</div>
+    </div>
+
+    <script>
+        const quizData = [
+            // Questions sur l'imparfait - conjugaison et usage
+            {
+                question: "Quand j'______ petit, je jouais au parc.",
+                translation: "当我小的时候，我在公园玩。(être)",
+                answers: [
+                    {french: "étais", chinese: "是（我）过去 ✓"},
+                    {french: "suis", chinese: "是（我）现在"},
+                    {french: "serai", chinese: "是（我）将来"}
+                ],
+                correct: 0,
+                fullSentence: "Quand j'étais petit, je jouais au parc."
+            },
+            {
+                question: "Il ______ beau hier.",
+                translation: "昨天天气很好。(faire)",
+                answers: [
+                    {french: "fait", chinese: "做/天气（现在）"},
+                    {french: "faisait", chinese: "做/天气（过去）✓"},
+                    {french: "fera", chinese: "做/天气（将来）"}
+                ],
+                correct: 1,
+                fullSentence: "Il faisait beau hier."
+            },
+            {
+                question: "Tous les jours, elle ______ à l'école.",
+                translation: "每天，她都去学校。(aller)",
+                answers: [
+                    {french: "va", chinese: "去（现在）"},
+                    {french: "allait", chinese: "去（过去）✓"},
+                    {french: "ira", chinese: "去（将来）"}
+                ],
+                correct: 1,
+                fullSentence: "Tous les jours, elle allait à l'école."
+            },
+            {
+                question: "Nous ______ la télévision le soir.",
+                translation: "我们晚上看电视。(regarder)",
+                answers: [
+                    {french: "regardons", chinese: "看（现在）"},
+                    {french: "regardions", chinese: "看（过去）✓"},
+                    {french: "regarderons", chinese: "看（将来）"}
+                ],
+                correct: 1,
+                fullSentence: "Nous regardions la télévision le soir."
+            },
+            {
+                question: "Quand j'______ enfant, j'aimais les bonbons.",
+                translation: "当我还是孩子的时候，我喜欢糖果。(être)",
+                answers: [
+                    {french: "étais", chinese: "是（过去）✓"},
+                    {french: "suis", chinese: "是（现在）"},
+                    {french: "ai été", chinese: "是（复合过去时）"}
+                ],
+                correct: 0,
+                fullSentence: "Quand j'étais enfant, j'aimais les bonbons."
+            },
+            {
+                question: "Tu ______ toujours en retard.",
+                translation: "你总是迟到。(être)",
+                answers: [
+                    {french: "es", chinese: "是（现在）"},
+                    {french: "étais", chinese: "是（过去）✓"},
+                    {french: "été", chinese: "été（过去分词）"}
+                ],
+                correct: 1,
+                fullSentence: "Tu étais toujours en retard."
+            },
+            {
+                question: "Ils ______ au foot tous les week-ends.",
+                translation: "他们每个周末都踢足球。(jouer)",
+                answers: [
+                    {french: "jouent", chinese: "玩（现在）"},
+                    {french: "jouaient", chinese: "玩（过去）✓"},
+                    {french: "joueront", chinese: "玩（将来）"}
+                ],
+                correct: 1,
+                fullSentence: "Ils jouaient au foot tous les week-ends."
+            },
+            {
+                question: "La maison ______ grande et belle.",
+                translation: "房子又大又漂亮。(être)",
+                answers: [
+                    {french: "est", chinese: "是（现在）"},
+                    {french: "était", chinese: "是（过去）✓"},
+                    {french: "sera", chinese: "是（将来）"}
+                ],
+                correct: 1,
+                fullSentence: "La maison était grande et belle."
+            },
+            {
+                question: "Vous ______ du piano ?",
+                translation: "你们弹钢琴吗？(faire)",
+                answers: [
+                    {french: "faites", chinese: "做（现在）"},
+                    {french: "faisiez", chinese: "做（过去）✓"},
+                    {french: "ferez", chinese: "做（将来）"}
+                ],
+                correct: 1,
+                fullSentence: "Vous faisiez du piano ?"
+            },
+            {
+                question: "Je ______ beaucoup quand j'étais jeune.",
+                translation: "我年轻的时候读很多书。(lire)",
+                answers: [
+                    {french: "lis", chinese: "读（现在）"},
+                    {french: "lisais", chinese: "读（过去）✓"},
+                    {french: "lirai", chinese: "读（将来）"}
+                ],
+                correct: 1,
+                fullSentence: "Je lisais beaucoup quand j'étais jeune."
+            },
+            {
+                question: "Elle ______ des gâteaux tous les dimanches.",
+                translation: "她每个星期天都做蛋糕。(faire)",
+                answers: [
+                    {french: "fait", chinese: "做（现在）"},
+                    {french: "faisait", chinese: "做（过去）✓"},
+                    {french: "a fait", chinese: "做（复合过去时）"}
+                ],
+                correct: 1,
+                fullSentence: "Elle faisait des gâteaux tous les dimanches."
+            },
+            {
+                question: "Nous ______ heureux à cette époque.",
+                translation: "那个时候我们很幸福。(être)",
+                answers: [
+                    {french: "sommes", chinese: "是（现在）"},
+                    {french: "étions", chinese: "是（过去）✓"},
+                    {french: "serons", chinese: "是（将来）"}
+                ],
+                correct: 1,
+                fullSentence: "Nous étions heureux à cette époque."
+            },
+            {
+                question: "Mon père ______ très tôt le matin.",
+                translation: "我父亲早上起得很早。(se lever)",
+                answers: [
+                    {french: "se lève", chinese: "起床（现在）"},
+                    {french: "se levait", chinese: "起床（过去）✓"},
+                    {french: "s'est levé", chinese: "起床（复合过去时）"}
+                ],
+                correct: 1,
+                fullSentence: "Mon père se levait très tôt le matin."
+            },
+            {
+                question: "Il y ______ beaucoup d'arbres dans le jardin.",
+                translation: "花园里有很多树。(avoir)",
+                answers: [
+                    {french: "a", chinese: "有（现在）"},
+                    {french: "avait", chinese: "有（过去）✓"},
+                    {french: "aura", chinese: "有（将来）"}
+                ],
+                correct: 1,
+                fullSentence: "Il y avait beaucoup d'arbres dans le jardin."
+            },
+            {
+                question: "Les enfants ______ dans la cour.",
+                translation: "孩子们在院子里玩。(jouer)",
+                answers: [
+                    {french: "jouent", chinese: "玩（现在）"},
+                    {french: "jouaient", chinese: "玩（过去）✓"},
+                    {french: "ont joué", chinese: "玩（复合过去时）"}
+                ],
+                correct: 1,
+                fullSentence: "Les enfants jouaient dans la cour."
+            },
+            {
+                question: "Je ______ souvent au cinéma avec mes amis.",
+                translation: "我经常和朋友们去看电影。(aller)",
+                answers: [
+                    {french: "vais", chinese: "去（现在）"},
+                    {french: "allais", chinese: "去（过去）✓"},
+                    {french: "irai", chinese: "去（将来）"}
+                ],
+                correct: 1,
+                fullSentence: "J'allais souvent au cinéma avec mes amis."
+            },
+            {
+                question: "Tu ______ tes devoirs tous les soirs.",
+                translation: "你每天晚上做作业。(faire)",
+                answers: [
+                    {french: "fais", chinese: "做（现在）"},
+                    {french: "faisais", chinese: "做（过去）✓"},
+                    {french: "as fait", chinese: "做（复合过去时）"}
+                ],
+                correct: 1,
+                fullSentence: "Tu faisais tes devoirs tous les soirs."
+            },
+            {
+                question: "Ma grand-mère ______ très bien.",
+                translation: "我奶奶做饭做得很好。(cuisiner)",
+                answers: [
+                    {french: "cuisine", chinese: "做饭（现在）"},
+                    {french: "cuisinait", chinese: "做饭（过去）✓"},
+                    {french: "cuisinera", chinese: "做饭（将来）"}
+                ],
+                correct: 1,
+                fullSentence: "Ma grand-mère cuisinait très bien."
+            },
+            {
+                question: "Il ______ froid en hiver.",
+                translation: "冬天很冷。(faire)",
+                answers: [
+                    {french: "fait", chinese: "天气（现在）"},
+                    {french: "faisait", chinese: "天气（过去）✓"},
+                    {french: "fera", chinese: "天气（将来）"}
+                ],
+                correct: 1,
+                fullSentence: "Il faisait froid en hiver."
+            },
+            {
+                question: "Nous ______ souvent à la campagne.",
+                translation: "我们经常去乡下。(aller)",
+                answers: [
+                    {french: "allons", chinese: "去（现在）"},
+                    {french: "allions", chinese: "去（过去）✓"},
+                    {french: "irons", chinese: "去（将来）"}
+                ],
+                correct: 1,
+                fullSentence: "Nous allions souvent à la campagne."
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let hasAnswered = false;
+
+        function showCurrentQuestion() {
+            const currentQ = quizData[currentQuestionIndex];
+            document.getElementById('question').textContent = currentQ.question;
+            document.getElementById('translation').textContent = currentQ.translation;
+
+            const answersContainer = document.getElementById('answers');
+            answersContainer.innerHTML = '';
+
+            currentQ.answers.forEach((answer, i) => {
+                const button = document.createElement('button');
+                button.className = 'answer-btn';
+                button.innerHTML = `<span class="answer-french">${answer.french}</span><span class="answer-chinese">${answer.chinese}</span>`;
+                button.addEventListener('click', () => selectAnswer(i));
+                answersContainer.appendChild(button);
+            });
+
+            document.getElementById('nextBtn').classList.remove('show');
+            hasAnswered = false;
+            updateProgress();
+            updateScore();
+        }
+
+        function selectAnswer(answerIndex) {
+            if (hasAnswered) return;
+            hasAnswered = true;
+            const currentQ = quizData[currentQuestionIndex];
+            const buttons = document.querySelectorAll('.answer-btn');
+
+            if (answerIndex === currentQ.correct) {
+                // Bonne réponse - lire la phrase complète
+                speakText(currentQ.fullSentence);
+
+                buttons[answerIndex].classList.add('correct');
+                buttons.forEach(button => button.style.pointerEvents = 'none');
+
+                score++;
+            } else {
+                // Mauvaise réponse
+                speakText("C'est faux");
+
+                buttons[answerIndex].classList.add('incorrect');
+                buttons.forEach(button => button.style.pointerEvents = 'none');
+            }
+
+            document.getElementById('nextBtn').classList.add('show');
+            updateScore();
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex >= quizData.length) {
+                showFinalResult();
+            } else {
+                showCurrentQuestion();
+            }
+        }
+
+        function speakText(text) {
+            if ('speechSynthesis' in window) {
+                speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'fr-FR';
+                utterance.rate = 0.8;
+                speechSynthesis.speak(utterance);
+            }
+        }
+
+        function updateProgress() {
+            const percentage = ((currentQuestionIndex + 1) / quizData.length) * 100;
+            document.getElementById('progress').style.width = percentage + '%';
+        }
+
+        function updateScore() {
+            document.getElementById('score').textContent = `Score: ${score}/${Math.min(currentQuestionIndex + 1, quizData.length)}`;
+        }
+
+        function showFinalResult() {
+            const percentage = Math.round((score / quizData.length) * 100);
+            let message, emoji;
+
+            if (score === quizData.length) {
+                message = 'PARFAIT ! Vous maîtrisez l\'imparfait ! 完美！您掌握了过去未完成时！';
+                emoji = '🏆';
+            } else {
+                message = `Vous devez avoir 20/20 pour continuer ! Recommencez ! 必须得20/20才能继续！重新开始！`;
+                emoji = '📚';
+            }
+
+            let finalContent = `
+                <div class="final-screen">
+                    <div style="font-size: 3em; margin-bottom: 20px;">${emoji}</div>
+                    <h2 style="color: #2c3e50; margin-bottom: 20px;">Quiz Terminé !</h2>
+                    <div class="final-score" style="color: ${score === quizData.length ? '#2ecc71' : '#e74c3c'};">${score}/${quizData.length}</div>
+                    <div style="font-size: 1.3em; color: #7f8c8d; margin-bottom: 30px;">${percentage}% - ${message}</div>
+                    <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">`;
+
+            if (score === quizData.length) {
+                finalContent += `<button class="restart-btn" id="restartBtn">Recommencer</button>`;
+            } else {
+                finalContent += `<button class="restart-btn" style="background: #e74c3c;" id="restartBtn">Recommencer pour avoir 20/20</button>`;
+            }
+
+            finalContent += '</div></div>';
+            document.getElementById('quiz-area').innerHTML = finalContent;
+
+            document.getElementById('restartBtn').addEventListener('click', restartQuiz);
+        }
+
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            hasAnswered = false;
+
+            document.getElementById('quiz-area').innerHTML = `
+                <div class="question-section">
+                    <div class="question-header">
+                        <div class="question" id="question"></div>
+                        <button class="speaker-btn" id="speakerBtn">🔊</button>
+                    </div>
+                    <div class="translation" id="translation"></div>
+                </div>
+                <div class="answers" id="answers"></div>
+                <button class="next-btn" id="nextBtn">Question suivante</button>`;
+
+            setupEventListeners();
+            showCurrentQuestion();
+        }
+
+        function setupEventListeners() {
+            document.getElementById('speakerBtn').addEventListener('click', () => {
+                speakText(document.getElementById('question').textContent);
+            });
+            document.getElementById('nextBtn').addEventListener('click', nextQuestion);
+        }
+
+        setupEventListeners();
+        showCurrentQuestion();
+    </script>
+</body>
+</html>
